@@ -4,7 +4,8 @@ var gulp  = require('gulp'),
   cleanCss = require('gulp-clean-css'),
   rename = require('gulp-rename'),
   postcss      = require('gulp-postcss'),
-  autoprefixer = require('autoprefixer');
+  autoprefixer = require('autoprefixer'),
+    ejs = require("gulp-ejs");
 
 function buildCss() {
     return gulp.src(['scss/*.scss'])
@@ -27,9 +28,19 @@ function buildCss() {
         .pipe(gulp.dest('css/'))
 }
 
-function watcher() {
-    gulp.watch(['scss/*.scss'], gulp.series(buildCss));
+function buildViews() {
+    return gulp.src("./src/*.ejs")
+        .pipe(ejs({
+            msg: "Hello Gulp!"
+        }))
+        .pipe(gulp.dest("./public"))
 }
 
-exports.watch = gulp.series(buildCss, watcher);
-exports.default = gulp.series(buildCss);
+function watcher() {
+    gulp.watch(['scss/*.scss'], gulp.series(buildViews, buildCss));
+}
+
+
+
+exports.watch = gulp.series(buildCss, buildViews, watcher);
+exports.default = gulp.series(buildCss, buildViews);
