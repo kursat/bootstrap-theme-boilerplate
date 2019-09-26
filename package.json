@@ -5,7 +5,7 @@
   "repository": "https://github.com/HackerThemes/theme-kit",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "live-server ."
   },
   "keywords": [
     "bootstrap",
@@ -26,6 +26,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.1",
     "gulp-scss-lint": "^1.0.0",
-    "gulp-sourcemaps": "^2.6.4"
+    "gulp-sourcemaps": "^2.6.4",
+    "live-server": "^1.2.1"
   }
 }
