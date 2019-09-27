@@ -8,7 +8,7 @@ var gulp  = require('gulp'),
     ejs = require("gulp-ejs");
 
 function buildCss() {
-    return gulp.src(['scss/*.scss'])
+    return gulp.src(['src/scss/*.scss'])
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss([ autoprefixer({ browsers: [
@@ -22,25 +22,30 @@ function buildCss() {
                 'Android >= 4',
                 'Opera >= 12']})]))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('css/'))
+        .pipe(gulp.dest('public/css'))
         .pipe(cleanCss())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('css/'))
+        .pipe(gulp.dest('public/css'))
 }
 
 function buildViews() {
-    return gulp.src("./src/*.ejs")
+    return gulp.src("src/[A-Za-z]*.ejs")
         .pipe(ejs({
             msg: "Hello Gulp!"
         }))
-        .pipe(gulp.dest("./public"))
+        .pipe(rename({ extname: '.html' }))
+        .pipe(gulp.dest("public"))
+}
+
+function copyJs() {
+    return gulp
+        .src(['src/js/**/*'])
+        .pipe(gulp.dest('public/js'));
 }
 
 function watcher() {
-    gulp.watch(['scss/*.scss'], gulp.series(buildViews, buildCss));
+    gulp.watch(['src/*.*'], gulp.series(buildViews, buildCss, copyJs));
 }
 
-
-
-exports.watch = gulp.series(buildCss, buildViews, watcher);
-exports.default = gulp.series(buildCss, buildViews);
+exports.watch = gulp.series(buildCss, buildViews, copyJs, watcher);
+exports.default = gulp.series(buildCss, buildViews, copyJs);
